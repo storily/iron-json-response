@@ -63,7 +63,7 @@ impl AfterMiddleware for JsonResponseMiddleware {
                 .remove::<JsonResponseMiddleware>()
                 .and_then(|j| {
                     #[cfg(debug_assertions)]
-                    let maybe_json = serde_json::to_pretty_string(&j.value);
+                    let maybe_json = serde_json::to_string_pretty(&j.value);
                     #[cfg(not(debug_assertions))]
                     let maybe_json = serde_json::to_string(&j.value);
 
