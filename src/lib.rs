@@ -62,7 +62,12 @@ impl AfterMiddleware for JsonResponseMiddleware {
             resp.extensions
                 .remove::<JsonResponseMiddleware>()
                 .and_then(|j| {
-                    if let Ok(json_string) = serde_json::to_string(&j.value) {
+                    #[cfg(debug_assertions)]
+                    let maybe_json = serde_json::to_pretty_string(&j.value);
+                    #[cfg(not(debug_assertions))]
+                    let maybe_json = serde_json::to_string(&j.value);
+
+                    if let Ok(json_string) = maybe_json {
                         match j.callback {
                             Some(ref cb) => {
                                 let mut jsonp = String::new();
